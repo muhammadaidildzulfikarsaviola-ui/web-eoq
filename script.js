@@ -23,3 +23,22 @@ function renderSensitivity(D,S,H,currentQ){
 }
 function reset(){els.demand.value=DEFAULTS.demand;els.orderingCost.value=DEFAULTS.orderingCost;els.holdingCost.value=DEFAULTS.holdingCost;calculate()}
 ["demand","orderingCost","holdingCost"].forEach(k=>els[k].addEventListener("input",calculate));$("resetBtn").addEventListener("click",reset);calculate();
+
+function extraModules(){
+  const fc=["fc1","fc2","fc3"].map(id=>Number($(id)?.value)||0);
+  if($("forecastValue")) $("forecastValue").textContent=Math.round(fc.reduce((a,b)=>a+b,0)/3).toLocaleString("id-ID")+" unit";
+  const daily=Number($("dailyDemand")?.value)||0,lead=Number($("leadTime")?.value)||0,ss=Number($("safetyStock")?.value)||0;
+  if($("ropValue")) $("ropValue").textContent=Math.round(daily*lead+ss).toLocaleString("id-ID")+" unit";
+  if($("cycleStockValue")) $("cycleStockValue").textContent=els.eoq.textContent+" unit";
+  const abc=[
+    ["Bahan A",120000,18000],["Bahan B",60000,25000],["Bahan C",15000,32000],["Bahan D",8000,12000],["Bahan E",3000,9000]
+  ].map(x=>({...x,value:x[1]*x[2]})).sort((a,b)=>b.value-a.value);
+  const total=abc.reduce((s,x)=>s+x.value,0); let cum=0;
+  if($("abcTable")) $("abcTable").innerHTML=abc.map(x=>{cum+=x.value;const p=cum/total;const cls=p<=.8?"A":p<=.95?"B":"C";return '<tr><td>'+x[0]+'</td><td>'+x[1].toLocaleString("id-ID")+'</td><td>'+rupiah(x[2])+'</td><td>'+rupiah(x.value)+'</td><td><span class="abc-badge abc-'+cls+'">'+cls+'</span></td></tr>'}).join("");
+  const D=Number(els.demand.value)||0,S=Number(els.orderingCost.value)||0,H=Number(els.holdingCost.value)||0;
+  if(D&&S&&H){const r=model(D,S,H);$("planQty").textContent=Math.round(r.Q).toLocaleString("id-ID")+" unit";$("planFreq").textContent=numberID(r.f)+" kali";$("planInterval").textContent=numberID(r.i)+" hari";$("planCost").textContent=rupiah(r.total);$("decisionText").textContent='Pesan sekitar '+Math.round(r.Q).toLocaleString("id-ID")+' unit setiap siklus.'}
+}
+["fc1","fc2","fc3","dailyDemand","leadTime","safetyStock"].forEach(id=>$(id)?.addEventListener("input",extraModules));
+const originalCalculate=calculate;
+calculate=function(){originalCalculate();extraModules()};
+extraModules();
