@@ -11,9 +11,13 @@
 <a class="nav-item" href="#input-section"><span>02</span> Parameter EOQ</a>
 <a class="nav-item" href="#result-section"><span>03</span> Hasil Analisis</a>
 <a class="nav-item" href="#sensitivity-section"><span>04</span> Analisis Sensitivitas</a>
-<a class="nav-item" href="#assumption-section"><span>05</span> Asumsi Model</a>
-<a class="nav-item" href="#formula-section"><span>06</span> Rumus & Catatan</a>
-<a class="nav-item" href="anggota.html"><span>07</span> Anggota Kelompok</a>
+<a class="nav-item" href="#forecast-section"><span>05</span> Forecasting</a>
+<a class="nav-item" href="#stock-section"><span>06</span> Safety Stock & ROP</a>
+<a class="nav-item" href="#abc-section"><span>07</span> ABC Analysis</a>
+<a class="nav-item" href="#planning-section"><span>08</span> Perencanaan Pembelian</a>
+<a class="nav-item" href="#assumption-section"><span>09</span> Asumsi Model</a>
+<a class="nav-item" href="#formula-section"><span>10</span> Rumus & Catatan</a>
+<a class="nav-item" href="anggota.html"><span>11</span> Anggota Kelompok</a>
 </aside>
 <main class="content">
 <section class="hero"><div><p class="kicker">ECONOMIC ORDER QUANTITY</p><h2>Hitung ukuran pemesanan yang paling masuk akal.</h2><p class="hero-copy">Masukkan kebutuhan tahunan, biaya pesan, dan biaya simpan. Sistem menghitung EOQ, frekuensi pemesanan, interval order, serta total biaya persediaan.</p></div><div class="hero-equation">EOQ = √(2DS / H)</div></section>
@@ -44,6 +48,22 @@
 <div class="panel sensitivity-panel"><div class="panel-head"><div><span class="panel-kicker">WHAT IF</span><h4>Jika permintaan berubah?</h4></div></div><div class="scenario-list" id="scenarioList"></div></div>
 <div class="panel sensitivity-panel"><div class="panel-head"><div><span class="panel-kicker">DECISION SUPPORT</span><h4>Insight otomatis</h4></div></div><div class="insight-list"><div><b>EOQ naik</b><span>Jika demand atau ordering cost naik.</span></div><div><b>EOQ turun</b><span>Jika holding cost per unit naik.</span></div><div><b>Biaya minimum</b><span>Terjadi saat ordering cost dan holding cost seimbang.</span></div></div></div>
 </div></section>
+
+<section id="forecast-section" class="section-block"><div class="section-head"><div><span class="section-number">05</span><h3>Forecasting Sederhana</h3></div></div>
+<div class="analysis-grid"><div class="panel forecast-panel"><div class="panel-head"><div><span class="panel-kicker">MOVING AVERAGE</span><h4>Prediksi demand periode berikutnya</h4></div></div><div class="forecast-inputs"><label class="field"><span>Demand Periode 1</span><input id="fc1" type="number" value="9500" min="0"></label><label class="field"><span>Demand Periode 2</span><input id="fc2" type="number" value="10200" min="0"></label><label class="field"><span>Demand Periode 3</span><input id="fc3" type="number" value="10800" min="0"></label></div><div class="forecast-result"><span>Forecast periode berikutnya</span><strong id="forecastValue">10.167 unit</strong><small>Metode: Moving Average 3 periode</small></div></div>
+<div class="panel"><div class="panel-head"><div><span class="panel-kicker">DECISION SUPPORT</span><h4>Kenapa forecasting diperlukan?</h4></div></div><div class="info-copy"><p>Forecast membantu memperkirakan demand sebelum menentukan kebutuhan persediaan dan rencana pembelian.</p><p>Untuk tugas ini digunakan Moving Average sederhana agar hubungan antara demand dan inventory mudah dipahami.</p></div></div></div></section>
+
+<section id="stock-section" class="section-block"><div class="section-head"><div><span class="section-number">06</span><h3>Safety Stock & Reorder Point</h3></div></div>
+<div class="analysis-grid"><div class="panel"><div class="panel-head"><div><span class="panel-kicker">REORDER POINT</span><h4>Kapan harus melakukan pemesanan?</h4></div></div><div class="stock-form"><label class="field"><span>Rata-rata demand per hari</span><div class="input-wrap"><input id="dailyDemand" type="number" value="400" min="0"><em>unit/hari</em></div></label><label class="field"><span>Lead time</span><div class="input-wrap"><input id="leadTime" type="number" value="7" min="0"><em>hari</em></div></label><label class="field"><span>Safety stock</span><div class="input-wrap"><input id="safetyStock" type="number" value="500" min="0"><em>unit</em></div></label></div><div class="stock-results"><div><span>ROP</span><strong id="ropValue">3.300 unit</strong></div><div><span>Cycle stock</span><strong id="cycleStockValue">7.746 unit</strong></div></div></div>
+<div class="panel"><div class="panel-head"><div><span class="panel-kicker">FORMULA</span><h4>Dasar perhitungan</h4></div></div><div class="formula-inline"><code>ROP = (Demand harian × Lead Time) + Safety Stock</code><p>Ketika stok mencapai ROP, perusahaan sebaiknya membuat pesanan agar barang datang sebelum persediaan habis.</p></div></div></div></section>
+
+<section id="abc-section" class="section-block"><div class="section-head"><div><span class="section-number">07</span><h3>ABC Analysis</h3></div></div>
+<div class="panel table-panel"><div class="panel-head"><div><span class="panel-kicker">INVENTORY PRIORITY</span><h4>Klasifikasi item berdasarkan nilai pemakaian tahunan</h4></div></div><table><thead><tr><th>Item</th><th>Demand/tahun</th><th>Harga/unit</th><th>Annual Usage</th><th>Kelas</th></tr></thead><tbody id="abcTable"></tbody></table></div>
+<p class="footnote">ABC Analysis membantu menentukan item mana yang perlu mendapat kontrol persediaan paling ketat. Contoh ini memakai data dummy agar konsepnya bisa langsung dipresentasikan.</p></section>
+
+<section id="planning-section" class="section-block"><div class="section-head"><div><span class="section-number">08</span><h3>Perencanaan Pembelian</h3></div></div>
+<div class="analysis-grid"><div class="panel"><div class="panel-head"><div><span class="panel-kicker">PURCHASE PLAN</span><h4>Ringkasan rencana order</h4></div></div><div class="planning-list"><div><span>Jumlah per order</span><strong id="planQty">7.746 unit</strong></div><div><span>Order per tahun</span><strong id="planFreq">15,49 kali</strong></div><div><span>Jarak antar order</span><strong id="planInterval">23,56 hari</strong></div><div><span>Estimasi biaya tahunan</span><strong id="planCost">Rp7.746.000</strong></div></div></div>
+<div class="panel"><div class="panel-head"><div><span class="panel-kicker">ACTION</span><h4>Keputusan operasional</h4></div></div><div class="decision-box"><strong id="decisionText">Pesan sekitar 7.746 unit setiap siklus.</strong><p>Gunakan ROP sebagai pemicu kapan order dibuat, lalu EOQ sebagai ukuran kuantitas order.</p></div></div></div></section>
 
 <section id="assumption-section" class="section-block"><div class="section-head"><div><span class="section-number">04</span><h3>Asumsi Model</h3></div></div>
 <div class="assumption-grid"><div class="assumption-card"><strong>01</strong><h4>Demand konstan</h4><p>Permintaan tahunan dianggap relatif stabil selama periode analisis.</p></div><div class="assumption-card"><strong>02</strong><h4>Replenishment sekaligus</h4><p>Persediaan diasumsikan masuk penuh ketika pesanan diterima.</p></div><div class="assumption-card"><strong>03</strong><h4>Harga tetap</h4><p>Tidak memperhitungkan quantity discount atau perubahan harga pembelian.</p></div><div class="assumption-card"><strong>04</strong><h4>Lead time diketahui</h4><p>Model dasar tidak menghitung ketidakpastian lead time maupun safety stock.</p></div></div></section>
