@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EOQ Inventory System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">EQ</div>
+        <div>
+          <div class="eyebrow">INVENTORY DECISION SYSTEM</div>
+          <h1>EOQ Dashboard</h1>
+        </div>
+      </div>
+      <div class="topbar-meta"><span class="status-dot"></span> Model aktif</div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="side-label">NAVIGASI</div>
+        <a class="nav-item active" href="index.html"><span>01</span> Dashboard</a>
+        <a class="nav-item" href="#input-section"><span>02</span> Parameter EOQ</a>
+        <a class="nav-item" href="#result-section"><span>03</span> Hasil Analisis</a>
+        <a class="nav-item" href="#formula-section"><span>04</span> Rumus & Catatan</a>
+        <a class="nav-item" href="anggota.html"><span>05</span> Anggota Kelompok</a>
+      </aside>
+
+      <main class="content">
+        <section class="hero">
+          <div>
+            <p class="kicker">ECONOMIC ORDER QUANTITY</p>
+            <h2>Hitung ukuran pemesanan yang paling masuk akal.</h2>
+            <p class="hero-copy">Masukkan kebutuhan tahunan, biaya pesan, dan biaya simpan. Sistem menghitung EOQ, frekuensi pemesanan, interval order, serta total biaya persediaan.</p>
+          </div>
+          <div class="hero-equation">EOQ = √(2DS / H)</div>
+        </section>
+
+        <section id="input-section" class="section-block">
+          <div class="section-head">
+            <div><span class="section-number">01</span><h3>Parameter EOQ</h3></div>
+            <button id="resetBtn" class="text-button" type="button">Reset contoh</button>
+          </div>
+
+          <div class="input-grid">
+            <label class="field">
+              <span>Kebutuhan Tahunan <b>D</b></span>
+              <div class="input-wrap"><input id="demand" type="number" min="0" step="1" value="120000"><em>unit/tahun</em></div>
+            </label>
+            <label class="field">
+              <span>Biaya Pesan <b>S</b></span>
+              <div class="input-wrap"><span>Rp</span><input id="orderingCost" type="number" min="0" step="1000" value="250000"></div>
+            </label>
+            <label class="field">
+              <span>Biaya Simpan <b>H</b></span>
+              <div class="input-wrap"><span>Rp</span><input id="holdingCost" type="number" min="0" step="100" value="1000"><em>/unit/tahun</em></div>
+            </label>
+          </div>
+        </section>
+
+        <section id="result-section" class="section-block">
+          <div class="section-head">
+            <div><span class="section-number">02</span><h3>Hasil Analisis</h3></div>
+            <div id="validation" class="validation">✓ Parameter valid</div>
+          </div>
+
+          <div class="metrics">
+            <article class="metric primary">
+              <span class="metric-label">EOQ OPTIMAL</span>
+              <strong id="eoqValue">7.746</strong>
+              <small>unit per order</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">FREKUENSI</span>
+              <strong id="frequencyValue">15,49</strong>
+              <small>order per tahun</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">INTERVAL ORDER</span>
+              <strong id="intervalValue">23,56</strong>
+              <small>hari antar order</small>
+            </article>
+            <article class="metric">
+              <span class="metric-label">TOTAL BIAYA</span>
+              <strong id="totalCostValue">Rp7,75 jt</strong>
+              <small>order + holding</small>
+            </article>
+          </div>
+
+          <div class="analysis-grid">
+            <div class="panel chart-panel">
+              <div class="panel-head">
+                <div><span class="panel-kicker">INVENTORY CYCLE</span><h4>Pergerakan persediaan</h4></div>
+                <span class="legend-chip">Q = EOQ</span>
+              </div>
+              <div class="chart-wrap">
+                <svg id="inventoryChart" viewBox="0 0 760 300" preserveAspectRatio="none" aria-label="Grafik persediaan">
+                  <g class="grid-lines">
+                    <line x1="40" y1="36" x2="740" y2="36"></line>
+                    <line x1="40" y1="112" x2="740" y2="112"></line>
+                    <line x1="40" y1="188" x2="740" y2="188"></line>
+                    <line x1="40" y1="264" x2="740" y2="264"></line>
+                  </g>
+                  <polyline id="inventoryLine" points="" fill="none"></polyline>
+                  <line id="reorderLine" x1="40" y1="188" x2="740" y2="188" class="average-line"></line>
+                  <text x="48" y="283">Hari 0</text>
+                  <text x="365" y="283">Hari 15</text>
+                  <text x="690" y="283">Hari 30</text>
+                </svg>
+              </div>
+            </div>
+
+            <div class="panel breakdown-panel">
+              <div class="panel-head">
+                <div><span class="panel-kicker">COST BREAKDOWN</span><h4>Komposisi biaya</h4></div>
+              </div>
+              <div class="cost-total" id="costTotal">Rp7.746.000</div>
+              <div class="bar-track"><div id="orderBar"></div><div id="holdingBar"></div></div>
+              <div class="cost-row"><span><i class="dot order-dot"></i>Ordering cost</span><strong id="orderCostValue">Rp3.873.000</strong></div>
+              <div class="cost-row"><span><i class="dot hold-dot"></i>Holding cost</span><strong id="holdingCostValue">Rp3.873.000</strong></div>
+              <div class="balance-note">Pada EOQ, biaya pesan dan biaya simpan berada di titik minimum total yang seimbang.</div>
+            </div>
+          </div>
+
+          <div class="table-panel panel">
+            <div class="panel-head">
+              <div><span class="panel-kicker">DECISION TABLE</span><h4>Ringkasan keputusan</h4></div>
+            </div>
+            <table>
+              <thead><tr><th>Parameter</th><th>Nilai</th><th>Interpretasi</th></tr></thead>
+              <tbody>
+                <tr><td>EOQ</td><td id="tableEoq">7.746 unit</td><td>Jumlah unit yang disarankan setiap kali melakukan pemesanan.</td></tr>
+                <tr><td>Frekuensi order</td><td id="tableFrequency">15,49 kali/tahun</td><td>Perkiraan banyaknya pemesanan selama satu tahun.</td></tr>
+                <tr><td>Interval order</td><td id="tableInterval">23,56 hari</td><td>Rata-rata jarak waktu antar pemesanan.</td></tr>
+                <tr><td>Total biaya persediaan</td><td id="tableTotal">Rp7.746.000/tahun</td><td>Jumlah ordering cost dan holding cost pada kuantitas EOQ.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section id="formula-section" class="section-block formula-section">
+          <div class="section-head"><div><span class="section-number">03</span><h3>Rumus & Catatan</h3></div></div>
+          <div class="formula-grid">
+            <div class="formula-card"><strong>EOQ</strong><code>√(2DS / H)</code><p>Menentukan kuantitas order ekonomis.</p></div>
+            <div class="formula-card"><strong>Frekuensi</strong><code>D / EOQ</code><p>Menentukan jumlah order per tahun.</p></div>
+            <div class="formula-card"><strong>Interval</strong><code>365 / Frekuensi</code><p>Estimasi jarak antar order dalam hari.</p></div>
+          </div>
+          <p class="footnote">Asumsi model: permintaan relatif konstan, lead time diketahui, replenishment datang sekaligus, dan tidak ada quantity discount. Angka pada dashboard menjadi dinamis ketika parameter diubah.</p>
+        </section>
+      </main>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
